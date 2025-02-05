@@ -1,5 +1,5 @@
 export const DOMAIN = {
-  production: 'https://reurl.dev',
+  production: 'https://www.reurl.dev',
   development: 'http://localhost:3000'
 } as const;
 
