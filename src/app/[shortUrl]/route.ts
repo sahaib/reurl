@@ -2,11 +2,14 @@ import { NextRequest } from 'next/server';
 import { sql } from '@/lib/db';
 import { UAParser } from 'ua-parser-js';
 
-type RouteParams = { params: { shortUrl: string } };
+export const dynamic = 'force-dynamic';
 
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(
+  request: NextRequest,
+  context: { params: { shortUrl: string } }
+) {
   try {
-    const shortUrl = params.shortUrl;
+    const shortUrl = context.params.shortUrl;
 
     // Get link details
     const [link] = await sql`
@@ -16,11 +19,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     `;
 
     if (!link) {
-      // Redirect to 404 page if link not found or expired
-      return new Response(null, {
-        status: 302,
-        headers: { Location: '/404' },
-      });
+      return Response.redirect(new URL('/404', request.url));
     }
 
     // Parse user agent
@@ -55,16 +54,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       )
     `;
 
-    // Redirect to original URL
-    return new Response(null, {
-      status: 302,
-      headers: { Location: link.original_url },
-    });
+    return Response.redirect(new URL(link.original_url));
   } catch (error) {
     console.error('Error redirecting:', error);
-    return new Response(null, {
-      status: 302,
-      headers: { Location: '/404' },
-    });
+    return Response.redirect(new URL('/404', request.url));
   }
 } 
