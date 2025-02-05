@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from '@clerk/nextjs';
-import { ThemeSwitcher } from "@/once-ui/components/ThemeSwitcher";
+import { dark } from '@clerk/themes';
+import type { Appearance } from '@clerk/types';
 import "./globals.scss";
 import "@/once-ui/styles/index.scss";
 import { style } from "../once-ui/resources/config";
@@ -13,13 +14,39 @@ export const metadata: Metadata = {
   description: "A modern URL shortening platform",
 };
 
+const appearance: Appearance = {
+  baseTheme: dark,
+  variables: {
+    colorPrimary: 'rgb(34 197 94)',
+    colorBackground: '#000',
+    colorText: '#fff',
+    colorInputBackground: 'rgba(255, 255, 255, 0.1)',
+    colorInputText: '#fff',
+    borderRadius: '0.5rem',
+  },
+  elements: {
+    card: 'bg-black shadow-xl border border-neutral-800',
+    formButtonPrimary: 'bg-emerald-500 hover:bg-emerald-600',
+    socialButtonsIconButton: 'border-neutral-800 hover:bg-neutral-800',
+    formField: 'border-neutral-800',
+    footer: 'text-neutral-400',
+    modalBackdrop: 'bg-black/80 backdrop-blur-sm',
+    modalContent: 'bg-black border border-neutral-800 shadow-2xl'
+  },
+  layout: {
+    socialButtonsPlacement: "top" as const
+  }
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={appearance}
+    >
       <html lang="en"
             data-neutral={style.neutral}
             data-brand={style.brand}
@@ -31,9 +58,6 @@ export default function RootLayout({
             data-transition="all"
             data-scaling={style.scaling}>
         <body className={`${inter.className} min-h-screen transition-colors`}>
-          <div className="fixed top-4 right-4 z-50">
-            <ThemeSwitcher />
-          </div>
           {children}
         </body>
       </html>

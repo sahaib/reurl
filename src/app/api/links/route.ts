@@ -1,31 +1,33 @@
 import { NextResponse } from 'next/server';
-import { sql } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
+import { sql, executeQuery } from '@/lib/db';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const { userId } = await auth();
+    const { searchParams } = new URL(request.url);
+    const limit = parseInt(searchParams.get('limit') || '10');
+
     if (!userId) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     // Get user's UUID from our database
-    const [user] = await sql`
+    const [user] = await executeQuery<{ id: string }[]>(sql`
       SELECT id FROM users WHERE clerk_id = ${userId}
-    `;
+    `);
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
+      return new NextResponse('User not found', { status: 404 });
     }
 
-    // Get all links with click counts
-    const links = await sql`
+    const recentLinks = await executeQuery<{
+      id: string;
+      original_url: string;
+      short_url: string;
+      created_at: Date;
+      clicks: number;
+    }[]>(sql`
       SELECT 
         l.id,
         l.original_url,
@@ -37,14 +39,12 @@ export async function GET() {
       WHERE l.user_id = ${user.id}
       GROUP BY l.id
       ORDER BY l.created_at DESC
-    `;
+      LIMIT ${limit}
+    `);
 
-    return NextResponse.json(links);
+    return NextResponse.json(recentLinks);
   } catch (error) {
     console.error('Error fetching links:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch links' },
-      { status: 500 }
-    );
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 } 
