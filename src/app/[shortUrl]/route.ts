@@ -4,18 +4,14 @@ import { UAParser } from 'ua-parser-js';
 
 export const dynamic = 'force-dynamic';
 
-interface RouteContext {
-  params: {
-    shortUrl: string;
-  };
-}
+type Props = {
+  params: { shortUrl: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
-export async function GET(
-  req: NextRequest,
-  { params }: RouteContext
-) {
+export async function GET(request: NextRequest, props: Props) {
   try {
-    const shortUrl = params.shortUrl;
+    const shortUrl = props.params.shortUrl;
 
     // Get link details
     const [link] = await sql`
@@ -25,17 +21,21 @@ export async function GET(
     `;
 
     if (!link) {
-      const url = new URL('/404', req.url);
-      return Response.redirect(url);
+      return new Response(null, {
+        status: 302,
+        headers: {
+          'Location': '/404'
+        }
+      });
     }
 
     // Parse user agent
-    const ua = new UAParser(req.headers.get('user-agent') || '');
+    const ua = new UAParser(request.headers.get('user-agent') || '');
     const browser = ua.getBrowser();
     const device = ua.getDevice();
 
     // Get visitor IP
-    const forwardedFor = req.headers.get('x-forwarded-for');
+    const forwardedFor = request.headers.get('x-forwarded-for');
     const visitorIp = forwardedFor ? forwardedFor.split(',')[0].trim() : 'unknown';
 
     // Record analytics
@@ -52,8 +52,8 @@ export async function GET(
       ) VALUES (
         ${link.id},
         ${visitorIp},
-        ${req.headers.get('user-agent') || ''},
-        ${req.headers.get('referer') || ''},
+        ${request.headers.get('user-agent') || ''},
+        ${request.headers.get('referer') || ''},
         ${device.type || 'unknown'},
         ${browser.name || 'unknown'},
         ${'unknown'}, -- Would need a geo-ip service for these
@@ -61,9 +61,19 @@ export async function GET(
       )
     `;
 
-    return Response.redirect(new URL(link.original_url));
+    return new Response(null, {
+      status: 302,
+      headers: {
+        'Location': link.original_url
+      }
+    });
   } catch (error) {
     console.error('Error redirecting:', error);
-    return Response.redirect(new URL('/404', req.url));
+    return new Response(null, {
+      status: 302,
+      headers: {
+        'Location': '/404'
+      }
+    });
   }
 } 
