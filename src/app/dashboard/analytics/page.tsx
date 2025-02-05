@@ -23,10 +23,6 @@ export default function AnalyticsPage() {
     clicksByDay: []
   });
 
-  useEffect(() => {
-    fetchAnalytics();
-  }, [dateRange]);
-
   const fetchAnalytics = async () => {
     try {
       setIsLoading(true);
@@ -40,6 +36,10 @@ export default function AnalyticsPage() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, [dateRange, fetchAnalytics]);
 
   return (
     <div className="p-6 space-y-6">

@@ -6,7 +6,7 @@ import { Button } from '@/once-ui/components/Button';
 import { Input } from '@/once-ui/components/Input';
 
 export default function SettingsPage() {
-  const [defaultDomain, setDefaultDomain] = useState('reurl.dev');
+  const defaultDomain = 'reurl.dev';
   const [apiKey, setApiKey] = useState('');
   const [webhookUrl, setWebhookUrl] = useState('');
   const [isSaving, setIsSaving] = useState(false);
