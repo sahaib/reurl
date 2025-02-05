@@ -2,7 +2,6 @@
 
 import { useAuth } from "@clerk/nextjs";
 import { Card } from '@/once-ui/components/Card';
-import { Button } from '@/once-ui/components/Button';
 
 export default function Dashboard() {
   const { isLoaded } = useAuth();
