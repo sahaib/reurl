@@ -31,6 +31,7 @@ export default function LinksPage() {
       setLinks(data);
     } catch (error) {
       console.error('Error fetching links:', error);
+      showToast('Failed to fetch links');
     } finally {
       setIsLoading(false);
     }

@@ -5,7 +5,7 @@ import { UAParser } from 'ua-parser-js';
 export async function GET(
   request: NextRequest,
   { params }: { params: { shortUrl: string } }
-) {
+): Promise<NextResponse> {
   try {
     const shortUrl = params.shortUrl;
 
