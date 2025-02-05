@@ -7,7 +7,7 @@ export function Logo() {
   const [text, setText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const fullText = 'reur/.com';
-  const prefix = '// ';
+  const prefix = 'https:// ';
   const typingSpeed = 150;
   const deletingSpeed = 100;
   const pauseDuration = 2000;

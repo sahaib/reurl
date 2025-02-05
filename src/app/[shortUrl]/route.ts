@@ -4,14 +4,10 @@ import { UAParser } from 'ua-parser-js';
 
 export const dynamic = 'force-dynamic';
 
-type Props = {
-  params: { shortUrl: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
-
-export async function GET(request: NextRequest, props: Props) {
+export async function GET(request: NextRequest) {
   try {
-    const shortUrl = props.params.shortUrl;
+    // Extract shortUrl from pathname
+    const shortUrl = request.nextUrl.pathname.slice(1);
 
     // Get link details
     const [link] = await sql`
@@ -23,9 +19,7 @@ export async function GET(request: NextRequest, props: Props) {
     if (!link) {
       return new Response(null, {
         status: 302,
-        headers: {
-          'Location': '/404'
-        }
+        headers: { Location: '/404' }
       });
     }
 
@@ -56,24 +50,20 @@ export async function GET(request: NextRequest, props: Props) {
         ${request.headers.get('referer') || ''},
         ${device.type || 'unknown'},
         ${browser.name || 'unknown'},
-        ${'unknown'}, -- Would need a geo-ip service for these
+        ${'unknown'},
         ${'unknown'}
       )
     `;
 
     return new Response(null, {
       status: 302,
-      headers: {
-        'Location': link.original_url
-      }
+      headers: { Location: link.original_url }
     });
   } catch (error) {
     console.error('Error redirecting:', error);
     return new Response(null, {
       status: 302,
-      headers: {
-        'Location': '/404'
-      }
+      headers: { Location: '/404' }
     });
   }
-} 
+}
