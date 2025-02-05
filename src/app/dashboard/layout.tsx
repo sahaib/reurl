@@ -3,6 +3,7 @@
 import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Logo } from "@/components/Logo";
 
 const navigation = [
   { name: 'Overview', href: '/dashboard' },
@@ -27,9 +28,7 @@ export default function DashboardLayout({
           <div className="flex justify-between h-16">
             <div className="flex">
               <div className="flex-shrink-0 flex items-center">
-                <Link href="/dashboard" className="text-xl font-bold">
-                  URL Shortener
-                </Link>
+                <Logo />
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                 {navigation.map((item) => (

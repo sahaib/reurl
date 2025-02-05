@@ -7,6 +7,7 @@ import { Button } from '../once-ui/components/Button';
 import { UrlShortenerForm } from '@/components/UrlShortenerForm';
 import { Toast, useToast } from '@/once-ui/components/Toast';
 import { DOMAIN } from '@/config/domain';
+import { Logo } from '@/components/Logo';
 
 interface ShortenedURL {
   id: string;
@@ -20,7 +21,7 @@ export default function Home() {
   const { toast, showToast } = useToast();
 
   const getShortUrl = (shortId: string) => {
-    const baseUrl = DOMAIN.production; // Always use production domain for shortened URLs
+    const baseUrl = DOMAIN.production;
     return `${baseUrl}/${shortId}`;
   };
 
@@ -61,17 +62,20 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white">
       <div className="max-w-4xl mx-auto py-20 px-4">
-        <div className="flex justify-end mb-4">
-          <SignedIn>
-            <Button variant="ghost" onClick={() => window.location.href = '/dashboard'}>
-              Dashboard
-            </Button>
-          </SignedIn>
-          <SignedOut>
-            <SignInButton mode="modal">
-              <Button variant="ghost">Sign In</Button>
-            </SignInButton>
-          </SignedOut>
+        <div className="flex justify-between items-center mb-12">
+          <Logo />
+          <div>
+            <SignedIn>
+              <Button variant="ghost" onClick={() => window.location.href = '/dashboard'}>
+                Dashboard
+              </Button>
+            </SignedIn>
+            <SignedOut>
+              <SignInButton mode="modal">
+                <Button variant="ghost">Sign In</Button>
+              </SignInButton>
+            </SignedOut>
+          </div>
         </div>
 
         <div className="text-center space-y-4 mb-12">
