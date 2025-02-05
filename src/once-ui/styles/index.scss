@@ -1,0 +1,42 @@
+@import '../tokens/index.scss';
+
+// Theme variants
+[data-theme='dark'] {
+  --background: var(--neutral-900);
+  --foreground: var(--neutral-50);
+  color-scheme: dark;
+}
+
+[data-theme='light'] {
+  --background: var(--neutral-50);
+  --foreground: var(--neutral-900);
+  color-scheme: light;
+}
+
+// Base styles
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+// Border styles
+[data-border='playful'] {
+  --border-radius: 1rem;
+}
+
+[data-border='conservative'] {
+  --border-radius: 0.25rem;
+}
+
+[data-border='rounded'] {
+  --border-radius: 0.5rem;
+}
+
+// Surface styles
+[data-surface='filled'] {
+  --surface-background: var(--neutral-100);
+}
+
+[data-surface='translucent'] {
+  --surface-background: rgba(255, 255, 255, 0.1);
+}

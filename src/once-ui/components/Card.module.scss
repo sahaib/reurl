@@ -1,0 +1,16 @@
+.card {
+  background: var(--surface-background);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-6);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--neutral-200);
+  transition: var(--transition-all);
+
+  &.clickable {
+    cursor: pointer;
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+  }
+} 

@@ -1,0 +1,65 @@
+@import '../once-ui/styles/index.scss';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: var(--neutral-900);
+  --foreground: var(--neutral-50);
+  --surface: rgba(255, 255, 255, 0.1);
+  --border: var(--neutral-800);
+}
+
+html[data-theme='light'] {
+  --background: var(--neutral-50);
+  --foreground: var(--neutral-900);
+  --surface: var(--neutral-100);
+  --border: var(--neutral-200);
+}
+
+html[data-theme='dark'] {
+  --background: var(--neutral-900);
+  --foreground: var(--neutral-50);
+  --surface: rgba(255, 255, 255, 0.1);
+  --border: var(--neutral-800);
+}
+
+// Apply theme to all elements
+html {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  min-height: 100vh;
+}
+
+// Component styles
+.card, div[class*="card"] {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.input, input, textarea, select {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--foreground);
+
+  &::placeholder {
+    color: var(--neutral-400);
+  }
+}
+
+button.ghost:hover {
+  background: var(--surface);
+}
+
+// Global transitions
+* {
+  transition: background-color 0.2s ease-in-out, 
+              color 0.2s ease-in-out,
+              border-color 0.2s ease-in-out;
+}
