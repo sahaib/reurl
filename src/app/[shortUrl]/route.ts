@@ -1,11 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { sql } from '@/lib/db';
 import { UAParser } from 'ua-parser-js';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { shortUrl: string } }
-): Promise<NextResponse> {
+type RouteParams = { params: { shortUrl: string } };
+
+export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const shortUrl = params.shortUrl;
 
@@ -18,7 +17,10 @@ export async function GET(
 
     if (!link) {
       // Redirect to 404 page if link not found or expired
-      return NextResponse.redirect(new URL('/404', request.url));
+      return new Response(null, {
+        status: 302,
+        headers: { Location: '/404' },
+      });
     }
 
     // Parse user agent
@@ -54,9 +56,15 @@ export async function GET(
     `;
 
     // Redirect to original URL
-    return NextResponse.redirect(link.original_url);
+    return new Response(null, {
+      status: 302,
+      headers: { Location: link.original_url },
+    });
   } catch (error) {
     console.error('Error redirecting:', error);
-    return NextResponse.redirect(new URL('/404', request.url));
+    return new Response(null, {
+      status: 302,
+      headers: { Location: '/404' },
+    });
   }
 } 
