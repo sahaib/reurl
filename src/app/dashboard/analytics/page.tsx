@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card } from '@/once-ui/components/Card';
 import { Button } from '@/once-ui/components/Button';
 
@@ -23,7 +23,7 @@ export default function AnalyticsPage() {
     clicksByDay: []
   });
 
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await fetch(`/api/analytics?range=${dateRange}`);
@@ -35,11 +35,11 @@ export default function AnalyticsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [dateRange]);
 
   useEffect(() => {
     fetchAnalytics();
-  }, [dateRange, fetchAnalytics]);
+  }, [fetchAnalytics]);
 
   return (
     <div className="p-6 space-y-6">
