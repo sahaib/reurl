@@ -48,26 +48,11 @@ export function UrlShortenerForm({ onSubmit }: UrlShortenerFormProps) {
 
     try {
       setIsLoading(true);
-      const response = await fetch('/api/shorten', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          url: formattedUrl,
-          customSlug: customSlug || undefined,
-          password: password || undefined,
-          expiresAt: expiresAt || undefined,
-        }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to shorten URL');
-      }
-
-      const link = await response.json();
-      setCreatedLink({
-        ...link,
-        password: password || undefined
+      await onSubmit({
+        url: formattedUrl,
+        customSlug: customSlug || undefined,
+        password: password || undefined,
+        expiresAt: expiresAt || undefined,
       });
       
       // Reset form

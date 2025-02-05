@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { Card } from '@/once-ui/components/Card';
 import { Button } from '@/once-ui/components/Button';
-import { DOMAIN } from '@/config/domain';
 
 interface AnalyticsSummary {
   totalClicks: number;
