@@ -4,12 +4,15 @@ import { UAParser } from 'ua-parser-js';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(
-  request: NextRequest,
-  context: { params: { shortUrl: string } }
-) {
+type Props = {
+  params: {
+    shortUrl: string;
+  };
+};
+
+export async function GET(request: NextRequest, { params }: Props) {
   try {
-    const shortUrl = context.params.shortUrl;
+    const shortUrl = params.shortUrl;
 
     // Get link details
     const [link] = await sql`
@@ -19,7 +22,12 @@ export async function GET(
     `;
 
     if (!link) {
-      return Response.redirect(new URL('/404', request.url));
+      return new Response(null, {
+        status: 307,
+        headers: {
+          Location: '/404',
+        },
+      });
     }
 
     // Parse user agent
@@ -54,9 +62,19 @@ export async function GET(
       )
     `;
 
-    return Response.redirect(new URL(link.original_url));
+    return new Response(null, {
+      status: 307,
+      headers: {
+        Location: link.original_url,
+      },
+    });
   } catch (error) {
     console.error('Error redirecting:', error);
-    return Response.redirect(new URL('/404', request.url));
+    return new Response(null, {
+      status: 307,
+      headers: {
+        Location: '/404',
+      },
+    });
   }
 } 

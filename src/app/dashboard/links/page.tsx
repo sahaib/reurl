@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card } from '@/once-ui/components/Card';
 import { Button } from '@/once-ui/components/Button';
 import { Toast, useToast } from '@/once-ui/components/Toast';
@@ -19,11 +19,7 @@ export default function LinksPage() {
   const [isLoading, setIsLoading] = useState(true);
   const { toast, showToast } = useToast();
 
-  useEffect(() => {
-    fetchLinks();
-  }, []);
-
-  const fetchLinks = async () => {
+  const fetchLinks = useCallback(async () => {
     try {
       const response = await fetch('/api/links');
       if (!response.ok) throw new Error('Failed to fetch links');
@@ -35,7 +31,11 @@ export default function LinksPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [showToast]);
+
+  useEffect(() => {
+    fetchLinks();
+  }, [fetchLinks]);
 
   const deleteLink = async (id: string) => {
     try {
