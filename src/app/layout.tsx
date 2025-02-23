@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { ClerkProvider } from '@clerk/nextjs';
 import { dark } from '@clerk/themes';
 import type { Appearance } from '@clerk/types';
+import { Analytics } from '@vercel/analytics/react';
 import "./globals.scss";
 import "@/once-ui/styles/index.scss";
 import { style } from "../once-ui/resources/config";
@@ -134,6 +135,7 @@ export default function RootLayout({
         </head>
         <body className={`${inter.className} min-h-screen transition-colors`}>
           {children}
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>

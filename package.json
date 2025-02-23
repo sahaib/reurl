@@ -15,6 +15,7 @@
     "@floating-ui/react": "^0.27.3",
     "@neondatabase/serverless": "^0.10.4",
     "@types/ua-parser-js": "^0.7.39",
+    "@vercel/analytics": "^1.5.0",
     "dotenv": "^16.4.7",
     "nanoid": "^5.0.9",
     "next": "15.1.6",
